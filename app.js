@@ -3,9 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const pages = document.querySelectorAll('.page');
     const searchInput = document.getElementById('ingredient-search');
     const searchButton = document.getElementById('search-button');
-    const homeRecipesContainer = document.getElementById('home-recipes');
     const searchResultsContainer = document.getElementById('search-results');
     const weeklyPlanContainer = document.getElementById('weekly-plan');
+    const recipeScrollContainer = document.getElementById('recipe-scroll');
 
     // Handle navigation
     navButtons.forEach(button => {
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const searchTerm = searchInput.value.trim();
         if (searchTerm) {
             const results = recipeService.searchByIngredients(searchTerm);
-            displayRecipes(results, searchResultsContainer);
+            displaySearchResults(results);
         }
     });
 
@@ -46,7 +46,103 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadHomeRecipes() {
         const recipes = recipeService.getAllRecipes();
-        displayRecipes(recipes, homeRecipesContainer);
+        displayRecipes(recipes);
+    }
+
+    function displayRecipes(recipes) {
+        recipeScrollContainer.innerHTML = recipes.map(recipe => `
+            <div class="recipe-card" style="background-image: url('images/${recipe.Id}.jpg')">
+                <div class="recipe-overlay">
+                    <div class="recipe-header">
+                        <h2 class="recipe-title">${recipe.Name}</h2>
+                        <div class="recipe-actions">
+                            <button class="favorite-btn ${recipeService.favorites.includes(recipe.Id) ? 'active' : ''}" data-id="${recipe.Id}">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="add-to-week-btn" data-id="${recipe.Id}">
+                                <i class="fas fa-calendar-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="ingredients-container">
+                        <div class="ingredients-grid">
+                            ${recipe.Ingredients.slice(0, 10).map(ingredient => `
+                                <div class="ingredient-item">
+                                    <span class="ingredient-amount">${ingredient.Amount}</span>
+                                    <span class="ingredient-unit">${ingredient.Unit}</span>
+                                    <span class="ingredient-name">${ingredient.Name}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // Add event listeners for favorite buttons
+        recipeScrollContainer.querySelectorAll('.favorite-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const recipeId = parseInt(e.target.closest('.favorite-btn').dataset.id);
+                if (recipeService.favorites.includes(recipeId)) {
+                    recipeService.removeFromFavorites(recipeId);
+                    button.classList.remove('active');
+                } else {
+                    recipeService.addToFavorites(recipeId);
+                    button.classList.add('active');
+                }
+            });
+        });
+
+        // Add event listeners for add to week buttons
+        recipeScrollContainer.querySelectorAll('.add-to-week-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const recipeId = parseInt(e.target.closest('.add-to-week-btn').dataset.id);
+                // For simplicity, we'll add to Monday
+                recipeService.addToWeeklyPlan(recipeId, 'Monday');
+                loadWeeklyPlan();
+            });
+        });
+    }
+
+    function displaySearchResults(recipes) {
+        searchResultsContainer.innerHTML = recipes.map(recipe => `
+            <div class="recipe-card">
+                <h3>${recipe.Name}</h3>
+                <p>Time: ${recipe.TimeEstimate}</p>
+                <p>Servings: ${recipe.Servings}</p>
+                <p>Calories: ${recipe.Calories}</p>
+                <div class="recipe-actions">
+                    <button class="favorite-btn ${recipeService.favorites.includes(recipe.Id) ? 'active' : ''}" data-id="${recipe.Id}">
+                        ${recipeService.favorites.includes(recipe.Id) ? 'Remove from Favorites' : 'Add to Favorites'}
+                    </button>
+                    <button class="add-to-week-btn" data-id="${recipe.Id}">Add to Week</button>
+                </div>
+            </div>
+        `).join('');
+
+        // Add event listeners for favorite buttons
+        searchResultsContainer.querySelectorAll('.favorite-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const recipeId = parseInt(e.target.dataset.id);
+                if (recipeService.favorites.includes(recipeId)) {
+                    recipeService.removeFromFavorites(recipeId);
+                } else {
+                    recipeService.addToFavorites(recipeId);
+                }
+                displaySearchResults(recipes);
+            });
+        });
+
+        // Add event listeners for add to week buttons
+        searchResultsContainer.querySelectorAll('.add-to-week-btn').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const recipeId = parseInt(e.target.dataset.id);
+                recipeService.addToWeeklyPlan(recipeId, 'Monday');
+                loadWeeklyPlan();
+            });
+        });
     }
 
     function loadWeeklyPlan() {
@@ -94,46 +190,6 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', (e) => {
                 const day = e.target.dataset.day;
                 recipeService.removeFromWeeklyPlan(day);
-                loadWeeklyPlan();
-            });
-        });
-    }
-
-    function displayRecipes(recipes, container) {
-        container.innerHTML = recipes.map(recipe => `
-            <div class="recipe-card">
-                <h3>${recipe.Name}</h3>
-                <p>Time: ${recipe.TimeEstimate}</p>
-                <p>Servings: ${recipe.Servings}</p>
-                <p>Calories: ${recipe.Calories}</p>
-                <div class="recipe-actions">
-                    <button class="favorite-btn" data-id="${recipe.Id}">
-                        ${recipeService.favorites.includes(recipe.Id) ? 'Remove from Favorites' : 'Add to Favorites'}
-                    </button>
-                    <button class="add-to-week-btn" data-id="${recipe.Id}">Add to Week</button>
-                </div>
-            </div>
-        `).join('');
-
-        // Add event listeners for favorite buttons
-        container.querySelectorAll('.favorite-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const recipeId = parseInt(e.target.dataset.id);
-                if (recipeService.favorites.includes(recipeId)) {
-                    recipeService.removeFromFavorites(recipeId);
-                } else {
-                    recipeService.addToFavorites(recipeId);
-                }
-                displayRecipes(recipes, container);
-            });
-        });
-
-        // Add event listeners for add to week buttons
-        container.querySelectorAll('.add-to-week-btn').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const recipeId = parseInt(e.target.dataset.id);
-                // For simplicity, we'll add to Monday
-                recipeService.addToWeeklyPlan(recipeId, 'Monday');
                 loadWeeklyPlan();
             });
         });

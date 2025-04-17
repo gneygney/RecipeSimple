@@ -4,6 +4,7 @@
     --background-color: #f5f5f5;
     --text-color: #333;
     --app-bar-height: 60px;
+    --recipe-card-height: calc(100vh - var(--app-bar-height));
 }
 
 * {
@@ -16,6 +17,7 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
+    overflow: hidden;
 }
 
 .app-container {
@@ -72,21 +74,107 @@ body {
 
 .content {
     margin-top: var(--app-bar-height);
-    padding: 20px;
-    flex: 1;
+    height: var(--recipe-card-height);
+    overflow: hidden;
 }
 
-.page {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.recipe-scroll-container {
+    height: 100%;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
 }
 
-.page.hidden {
-    display: none;
+.recipe-card {
+    height: var(--recipe-card-height);
+    scroll-snap-align: start;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 100%);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    color: white;
+}
+
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.recipe-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.recipe-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.recipe-actions button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(5px);
+    transition: background-color 0.3s ease;
+}
+
+.recipe-actions button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.recipe-actions button.active {
+    background-color: var(--primary-color);
+}
+
+.ingredients-container {
+    margin-top: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.ingredient-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+}
+
+.ingredient-amount {
+    font-weight: bold;
+}
+
+.ingredient-unit {
+    opacity: 0.8;
 }
 
 .search-container {
@@ -115,59 +203,6 @@ body {
 
 .search-container button:hover {
     background-color: var(--secondary-color);
-}
-
-.recipe-list {
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-}
-
-.recipe-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    transition: transform 0.3s ease;
-}
-
-.recipe-card:hover {
-    transform: translateY(-2px);
-}
-
-.recipe-card h3 {
-    color: var(--primary-color);
-    margin-bottom: 10px;
-}
-
-.recipe-card p {
-    margin-bottom: 5px;
-    font-size: 14px;
-}
-
-.recipe-actions {
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
-}
-
-.recipe-actions button {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.favorite-btn {
-    background-color: #ffd700;
-    color: #333;
-}
-
-.add-to-week-btn {
-    background-color: var(--primary-color);
-    color: white;
 }
 
 .weekly-plan {
@@ -203,14 +238,14 @@ h1 {
     }
     
     .content {
-        padding: 10px;
+        padding: 0;
     }
     
-    .page {
-        padding: 15px;
+    .recipe-title {
+        font-size: 20px;
     }
-
-    .recipe-list {
+    
+    .ingredients-grid {
         grid-template-columns: 1fr;
     }
 } 
