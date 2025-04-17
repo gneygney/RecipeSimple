@@ -1,0 +1,66 @@
+[
+  {
+    "Id": 1,
+    "Name": "Classic Spaghetti Bolognese",
+    "TimeEstimate": "45 minutes",
+    "Servings": 4,
+    "Directions": "1. Heat oil in a large pan. 2. Add onions and garlic, cook until soft. 3. Add ground beef and cook until browned. 4. Add tomatoes and simmer for 30 minutes. 5. Serve over cooked spaghetti.",
+    "Description": "A classic Italian pasta dish with rich meat sauce",
+    "Protein": 25,
+    "Carbs": 45,
+    "Fat": 15,
+    "Calories": 450,
+    "YoutubeLink": "https://www.youtube.com/watch?v=example1",
+    "Notes": "Best served with fresh parmesan cheese",
+    "Ingredients": [
+      {
+        "Name": "Ground Beef",
+        "Amount": "500",
+        "Unit": "g",
+        "UnitNotes": "lean"
+      },
+      {
+        "Name": "Spaghetti",
+        "Amount": "400",
+        "Unit": "g"
+      },
+      {
+        "Name": "Tomatoes",
+        "Amount": "800",
+        "Unit": "g",
+        "UnitNotes": "canned"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "Name": "Vegetable Stir Fry",
+    "TimeEstimate": "20 minutes",
+    "Servings": 2,
+    "Directions": "1. Heat oil in a wok. 2. Add vegetables and stir fry for 5 minutes. 3. Add sauce and cook for another 2 minutes. 4. Serve with rice.",
+    "Description": "Quick and healthy vegetable stir fry",
+    "Protein": 8,
+    "Carbs": 30,
+    "Fat": 5,
+    "Calories": 250,
+    "YoutubeLink": "https://www.youtube.com/watch?v=example2",
+    "Notes": "Can be made with any vegetables you have on hand",
+    "Ingredients": [
+      {
+        "Name": "Broccoli",
+        "Amount": "200",
+        "Unit": "g"
+      },
+      {
+        "Name": "Carrots",
+        "Amount": "100",
+        "Unit": "g"
+      },
+      {
+        "Name": "Bell Pepper",
+        "Amount": "1",
+        "Unit": "piece"
+      }
+    ]
+  }
+] 

@@ -22,19 +22,29 @@
             <div class="page" id="home-page">
                 <h1>Welcome to Recipe App</h1>
                 <p>Your personal recipe collection</p>
+                <div class="recipe-list" id="home-recipes">
+                    <!-- Recipes will be loaded here -->
+                </div>
             </div>
             <div class="page hidden" id="search-page">
                 <h1>Search Recipes</h1>
                 <div class="search-container">
-                    <input type="text" placeholder="Search recipes...">
+                    <input type="text" id="ingredient-search" placeholder="Enter ingredients (comma separated)...">
+                    <button id="search-button">Search</button>
+                </div>
+                <div class="recipe-list" id="search-results">
+                    <!-- Search results will be loaded here -->
                 </div>
             </div>
             <div class="page hidden" id="week-page">
                 <h1>Weekly Plan</h1>
-                <p>Plan your meals for the week</p>
+                <div class="weekly-plan" id="weekly-plan">
+                    <!-- Weekly plan will be loaded here -->
+                </div>
             </div>
         </main>
     </div>
+    <script src="recipeService.js"></script>
     <script src="app.js"></script>
     <script>
         if ('serviceWorker' in navigator) {
